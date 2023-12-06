@@ -14,7 +14,7 @@ public class GraphqlController : ControllerBase
 {
     private readonly IHttpClientFactory _httpClientFactory;
 
-    public GraphqlController(IHttpClientFactory httpClientFactory, ILogger<GraphqlController> logger)
+    public GraphqlController(IHttpClientFactory httpClientFactory)
     {
         _httpClientFactory = httpClientFactory;
        
