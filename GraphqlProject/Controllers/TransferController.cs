@@ -47,7 +47,6 @@ public class TransferController : ControllerBase
  
 };
 
-        // GraphQL sorgusunu gönder ve yanıtı al
         var graphQLResponse = graphHttpClient.SendQueryAsync<Response>(graphQLRequest);
         return Ok(graphQLResponse);
     }
