@@ -1,17 +1,24 @@
 ﻿using GraphQL;
 using GraphQL.Client.Http;
 using GraphQL.Client.Serializer.Newtonsoft;
-using GraphqlProject.Entities;
 using Microsoft.AspNetCore.Mvc;
 using System.Net.NetworkInformation;
 using System.Net;
 using System.Xml.Linq;
+using GraphqlProject.Helpers;
+using Microsoft.EntityFrameworkCore;
+using GraphQL.Client.Abstractions;
 
 [Route("api/[controller]")]
 [ApiController]
 public class TransferController : ControllerBase
 {
-   
+    readonly GraphqlDbContext _dbContext;
+    public TransferController(GraphqlDbContext dbContext)
+    {
+        _dbContext = dbContext;          
+    }
+
     [HttpGet, Route("get-all")]
     public async Task<IActionResult> GetTransfer()
     {
@@ -27,8 +34,9 @@ public class TransferController : ControllerBase
         var graphQLRequest = new GraphQLRequest
         {
             Query = @"
-                 query {
-     customer(id: ""1"") {
+              query {
+     customers(first:100) {
+     data{
          id
          name
          type
@@ -43,11 +51,26 @@ public class TransferController : ControllerBase
              billed_date
              paid_date
             }
+        }
         }}"
- 
-};
-
+        };
         var graphQLResponse = graphHttpClient.SendQueryAsync<Response>(graphQLRequest);
-        return Ok(graphQLResponse);
+
+            foreach (var customerDataContainer in graphQLResponse.Result.Data.Customers.Data)
+            {
+            
+                var customerData = customerDataContainer.Products;
+            _dbContext.Customers.Add(customerDataContainer);
+
+            foreach (var product in customerData)
+                {
+            _dbContext.Products.Add(product);
+            }               
+            }
+            _dbContext.SaveChanges();
+
+            return Ok();
+        
+
     }
 }

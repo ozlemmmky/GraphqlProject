@@ -2,8 +2,18 @@
 
 public class Response
 {
-    public List<Customer> Customers { get; set; }
+    public Customers Customers { get; set; }
 }
+
+public class Customers
+{
+    public List<Customer> Data { get; set; }
+}
+
+//public class CustomerData
+//{
+//    public List<Customer> Customer { get; set; }
+//}
 
 public class Customer
 {
@@ -14,8 +24,7 @@ public class Customer
     public string Address { get; set; }
     public string City { get; set; }
     public string State { get; set; }
-    public string PostalCode { get; set; }
-    public IEnumerable<Product> Products { get; set; }
+    public List<Product> Products { get; set; }
 }
 
 public class Product
@@ -24,5 +33,9 @@ public class Product
     public int Amount { get; set; }
     public string Status { get; set; }
     public DateTime BilledDate { get; set; }
-    public DateTime PaidDate { get; set; }
+    public DateTime? PaidDate { get; set; }
+    public string CustomerId { get; set; }
+    public Customer Customer { get; set; }
+
+
 }
